@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backoffice - Project Requirements Intake Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f4f8 0%, #d5e8f0 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .form-header {
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            color: white;
+            padding: 30px;
+        }
+        .form-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 400;
+        }
+        .form-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .form-body {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .form-group label .required {
+            color: #d13438;
+            margin-left: 2px;
+        }
+        .form-group .helper-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 3px rgba(0,120,212,0.1);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-group.error input,
+        .form-group.error textarea {
+            border-color: #d13438;
+            background-color: #fef0f0;
+        }
+        .form-group.error label {
+            color: #d13438;
+        }
+        .error-message {
+            color: #d13438;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        .form-group.error .error-message {
+            display: block;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .radio-option:hover, .checkbox-option:hover {
+            background-color: #f5f5f5;
+        }
+        .radio-option input, .checkbox-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .other-input {
+            margin-left: 28px;
+            margin-top: 5px;
+        }
+        .other-input input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 300px;
+        }
+        .file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .file-upload:hover {
+            border-color: #0078d4;
+            background-color: #f8fbfd;
+        }
+        .file-upload-icon {
+            font-size: 40px;
+            color: #0078d4;
+            margin-bottom: 10px;
+        }
+        .file-upload p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .file-upload .limits {
+            font-size: 12px;
+            color: #999;
+        }
+        .submit-section {
+            padding: 20px 30px 30px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        .submit-btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .submit-btn:hover {
+            background: #106ebe;
+        }
+        .validation-summary {
+            background: #fef0f0;
+            border: 1px solid #d13438;
+            border-radius: 4px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .validation-summary.show {
+            display: block;
+        }
+        .validation-summary h3 {
+            margin: 0 0 10px 0;
+            color: #d13438;
+            font-size: 16px;
+        }
+        .validation-summary ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #a4262c;
+        }
+        .question-number {
+            color: #666;
+            margin-right: 5px;
+        }
+        .review-notice {
+            background: #fff4ce;
+            border: 1px solid #ffb900;
+            border-radius: 4px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+        .review-notice h3 {
+            margin: 0 0 5px 0;
+            color: #8a6914;
+            font-size: 14px;
+        }
+        .review-notice p {
+            margin: 0;
+            color: #8a6914;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Backoffice - Project Requirements Intake Form</h1>
+            <p>Taylor Print & Visual Impressions IT - Requirements Form for Customer Facing Projects that require work to be completed by the Backoffice Team.<br>
+            Please review and answer the questions in this form and submit it for review by the Backoffice Team.</p>
+        </div>
+        
+        <form id="intakeForm" novalidate>
+            <div class="form-body">
+                <div class="review-notice">
+                    <h3>📋 Review Copy</h3>
+                    <p>This is a preview form for review purposes. Submit will validate fields but not send data.</p>
+                </div>
+                
+                <div class="validation-summary" id="validationSummary">
+                    <h3>Please complete the required fields:</h3>
+                    <ul id="errorList"></ul>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">1.</span> Requestor Name <span class="required">*</span></label>
+                    <input type="text" name="requestorName" placeholder="Enter your answer">
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 2 (test question) -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">2.</span> This is my anser?? <span class="required">*</span></label>
+                    <input type="text" name="testQuestion" placeholder="Enter your answer">
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">3.</span> Approved By <span class="required">*</span></label>
+                    <div class="helper-text">Manager who has approved business case and request if applicable.</div>
+                    <input type="text" name="approvedBy" placeholder="Enter your answer">
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">4.</span> Describe the Opportunity/Project: <span class="required">*</span></label>
+                    <div class="helper-text">Provide background and describe the extent of issues experienced or detail of requirements, any existing systems involved, customer and other detail to aid in clear understanding of the needed piece of work.</div>
+                    <textarea name="projectDescription" placeholder="Enter your answer"></textarea>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">5.</span> What is the timeline for this project, including kickoff and target launch? <span class="required">*</span></label>
+                    <textarea name="timeline" placeholder="Enter your answer"></textarea>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">6.</span> What Taylor storefront will be involved with this project? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="storefront" value="Response Element">
+                            <span>Response Element</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="storefront" value="OPS">
+                            <span>OPS</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="storefront" value="Yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="storefront" value="Other">
+                            <span>Other</span>
+                        </label>
+                        <div class="other-input" id="storefrontOther" style="display:none;">
+                            <input type="text" placeholder="Please specify">
+                        </div>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">7.</span> Customer Name <span class="required">*</span></label>
+                    <input type="text" name="customerName" placeholder="Enter your answer">
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 8 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">8.</span> What is the efficiency gained with this project and how can/will it be measured? <span class="required">*</span></label>
+                    <div class="helper-text">This information will be used to prioritize the project. This could be qty of hours saved or net savings (hard or soft savings).</div>
+                    <textarea name="efficiency" placeholder="Enter your answer"></textarea>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 9 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">9.</span> Which Taylor facility is responsible for invoicing the customer? <span class="required">*</span></label>
+                    <div class="helper-text">Select all that apply:</div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="Card Fulfillment Services"><span>Card Fulfillment Services</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="CGC"><span>CGC</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TPI-Bloomington"><span>TPI-Bloomington</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TPI-Heinrich"><span>TPI-Heinrich</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TPI-Las Vegas"><span>TPI-Las Vegas</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TPP-Minneapolis"><span>TPP-Minneapolis</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TPI-Orlando"><span>TPI-Orlando</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TPI-Rochester"><span>TPI-Rochester</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TVI-ADA"><span>TVI-ADA</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TVI-Atlanta"><span>TVI-Atlanta</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TVI-New York"><span>TVI-New York</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TVI-Portland"><span>TVI-Portland</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="TVI-St. Louis"><span>TVI-St. Louis</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="invoicingFacility" value="Other"><span>Other</span></label>
+                    </div>
+                    <div class="error-message">Please select at least one option</div>
+                </div>
+
+                <!-- Question 10 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">10.</span> Which Taylor production facility will be involved with this request? <span class="required">*</span></label>
+                    <div class="helper-text">Select all that apply:</div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="Card Fulfillment Services"><span>Card Fulfillment Services</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="CGC"><span>CGC</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TPI-Bloomington"><span>TPI-Bloomington</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TPI-Heinrich"><span>TPI-Heinrich</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TPI-Las Vegas"><span>TPI-Las Vegas</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TPP-Minneapolis"><span>TPP-Minneapolis</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TPI-Orlando"><span>TPI-Orlando</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TPI-Rochester"><span>TPI-Rochester</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TVI-ADA"><span>TVI-ADA</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TVI-Atlanta"><span>TVI-Atlanta</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TVI-New York"><span>TVI-New York</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TVI-Portland"><span>TVI-Portland</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="TVI-St. Louis"><span>TVI-St. Louis</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="productionFacility" value="Other"><span>Other</span></label>
+                    </div>
+                    <div class="error-message">Please select at least one option</div>
+                </div>
+
+                <!-- Question 11 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">11.</span> Will production of SKU's be vended/outsourced to a Taylor sister company or 3rd Party vendor? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="vendedOutsourced" value="Yes"><span>Yes</span></label>
+                        <label class="radio-option"><input type="radio" name="vendedOutsourced" value="No"><span>No</span></label>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 12 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">12.</span> What Taylor sister company/companies or 3rd Party vendor will be engaged? <span class="required">*</span></label>
+                    <textarea name="vendorEngaged" placeholder="Enter your answer"></textarea>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 13 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">13.</span> Have facility resources been identified and/or engaged/assigned? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="resourcesIdentified" value="Yes"><span>Yes</span></label>
+                        <label class="radio-option"><input type="radio" name="resourcesIdentified" value="No"><span>No</span></label>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 14 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">14.</span> How many products are involved in this project? <span class="required">*</span></label>
+                    <div class="helper-text">If possible, identify quantities of POD SKU's separate of Finished Goods Inventory SKU's.</div>
+                    <textarea name="productCount" placeholder="Enter your answer"></textarea>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 15 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">15.</span> Is the product list finalized, including the specifications for each SKU? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="productListFinalized" value="Yes"><span>Yes</span></label>
+                        <label class="radio-option"><input type="radio" name="productListFinalized" value="No"><span>No</span></label>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 16 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">16.</span> Which workflows are supported? <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option"><input type="checkbox" name="workflows" value="POD"><span>POD</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="workflows" value="Releases from Inventory (FG)"><span>Releases from Inventory (FG)</span></label>
+                    </div>
+                    <div class="error-message">Please select at least one option</div>
+                </div>
+
+                <!-- Question 17 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">17.</span> Have estimate templates been created (estimates only required for POD)? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="estimateTemplates" value="Yes"><span>Yes</span></label>
+                        <label class="radio-option"><input type="radio" name="estimateTemplates" value="No"><span>No</span></label>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 18 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">18.</span> Will print ready artwork be submitted by the customer? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="printReadyArtwork" value="Yes"><span>Yes</span></label>
+                        <label class="radio-option"><input type="radio" name="printReadyArtwork" value="No"><span>No</span></label>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 19 -->
+                <div class="form-group" data-required="true">
+                    <label><span class="question-number">19.</span> Do you have a file to attach? (i.e. Business Case, Product information) <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="hasFileToAttach" value="Yes"><span>Yes</span></label>
+                        <label class="radio-option"><input type="radio" name="hasFileToAttach" value="No"><span>No</span></label>
+                    </div>
+                    <div class="error-message">This field is required</div>
+                </div>
+
+                <!-- Question 20 -->
+                <div class="form-group" data-required="false">
+                    <label><span class="question-number">20.</span> Attach a file</label>
+                    <div class="file-upload">
+                        <div class="file-upload-icon">📎</div>
+                        <p><strong>Upload file</strong></p>
+                        <p class="limits">File number limit: 4 | Single file size limit: 1GB<br>
+                        Allowed file types: Word, Excel, PPT, PDF, Image, Video, Audio</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Show/hide "Other" input for storefront
+        document.querySelectorAll('input[name="storefront"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherInput = document.getElementById('storefrontOther');
+                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+            });
+        });
+
+        // Form validation
+        document.getElementById('intakeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            const errors = [];
+            
+            // Clear previous errors
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+
+            // Validate each required field
+            document.querySelectorAll('.form-group[data-required="true"]').forEach(group => {
+                const questionNum = group.querySelector('.question-number')?.textContent || '';
+                const label = group.querySelector('label')?.textContent.replace('*', '').trim() || 'Field';
+                
+                // Text inputs and textareas
+                const textInput = group.querySelector('input[type="text"], textarea');
+                if (textInput && !textInput.value.trim()) {
+                    group.classList.add('error');
+                    errors.push(questionNum + ' ' + label.split('.').pop().trim());
+                    isValid = false;
+                    return;
+                }
+
+                // Radio buttons
+                const radios = group.querySelectorAll('input[type="radio"]');
+                if (radios.length > 0) {
+                    const checked = group.querySelector('input[type="radio"]:checked');
+                    if (!checked) {
+                        group.classList.add('error');
+                        errors.push(questionNum + ' ' + label.split('.').pop().trim());
+                        isValid = false;
+                        return;
+                    }
+                }
+
+                // Checkboxes (at least one must be checked)
+                const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+                if (checkboxes.length > 0) {
+                    const checked = group.querySelector('input[type="checkbox"]:checked');
+                    if (!checked) {
+                        group.classList.add('error');
+                        errors.push(questionNum + ' ' + label.split('.').pop().trim());
+                        isValid = false;
+                        return;
+                    }
+                }
+            });
+
+            // Show/hide validation summary
+            const summary = document.getElementById('validationSummary');
+            const errorList = document.getElementById('errorList');
+            
+            if (!isValid) {
+                errorList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+                summary.classList.add('show');
+                summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                summary.classList.remove('show');
+                alert('✓ Form validation passed!\n\nThis is a review copy - no data was submitted.');
+            }
+        });
+    </script>
+</body>
+</html>
